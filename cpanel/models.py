@@ -1,6 +1,7 @@
 import uuid
 from django.db import models
 from django.contrib.auth.models import User
+from shortuuid.django_fields import ShortUUIDField
 # Create your models here.
 CLASS_CHOICES = (
         ('s1', 'S.1'), ('s2', 'S.2',), ('s3', 'S.3',),  ('s4', 'S.4'), ('s5', 'S.5'), ('s6', 'S.6')
@@ -12,13 +13,13 @@ class Student(models.Model):
     first_name = models.CharField(max_length=30)
     sur_name = models.CharField(max_length=30, verbose_name="Sur Name")
     date_of_birth = models.DateField(verbose_name="Date of Birth")
-    std_no = models.UUIDField(verbose_name="Student Number", default=uuid.uuid4, editable=False)
+    std_no = ShortUUIDField(verbose_name="Student Number", alphabet='0123456789', editable=False, length=9)
     sex = models.CharField(max_length=2, choices=GENDER_CHOICES)
     age = models.PositiveIntegerField()
     address_of_parents = models.CharField(max_length=100)
 
 class Admission(models.Model):
-    id = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
+    id = ShortUUIDField(length=8, editable=False, primary_key=True, alphabet='0123456789')
     student = models.OneToOneField(Student, on_delete=models.CASCADE, related_name="student_admission_foregin")
     admission_date = models.DateField()
     class_level = models.CharField(verbose_name="Class", choices=CLASS_CHOICES, max_length=3)
